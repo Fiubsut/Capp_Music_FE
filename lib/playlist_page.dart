@@ -101,7 +101,27 @@ class _PlaylistPageState extends State<PlaylistPage> {
 
   // Create playlist
   Future<void> createPlaylist(String playlistName) async {
-    if (playlistName.isEmpty) return;
+    if (playlistName.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Playlist name cannot be empty'),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+      return;
+    }
+
+    // Kiểm tra playlist trùng lặp
+    bool isDuplicate = playlists?.any((playlist) => playlist['playlistName'] == playlistName) ?? false;
+    if (isDuplicate) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Playlist with this name already exists'),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+      return;
+    }
 
     Map<String, String> userInfo = await getUserInfo();
     String userId = userInfo['userId'] ?? '';
@@ -155,8 +175,31 @@ class _PlaylistPageState extends State<PlaylistPage> {
   }
 
 
+
   // Update playlist name
   Future<void> updatePlaylist(String playlistId, String newName) async {
+    if (newName.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Playlist name cannot be empty'),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+      return;
+    }
+
+    // Kiểm tra playlist trùng lặp
+    bool isDuplicate = playlists?.any((playlist) => playlist['playlistName'] == newName && playlist['_id'] != playlistId) ?? false;
+    if (isDuplicate) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Playlist with this name already exists'),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+      return;
+    }
+
     try {
       final response = await http.put(
         Uri.parse('https://music-app-w554.onrender.com/api/playlists/$playlistId'),
@@ -202,6 +245,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
       print('Error updating playlist: $e');
     }
   }
+
 
 
   // Delete playlist

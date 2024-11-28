@@ -50,7 +50,22 @@ class _UserInfoPageState extends State<UserInfoPage> {
     String? userId = prefs.getString('userId');
 
     if (token != null && userId != null) {
+      // Kiểm tra nếu username hoặc email trống
+      if (username.isEmpty || email.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Username and email cannot be empty.',
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 2),
+          ),
+        );
+        return;
+      }
 
+      // Kiểm tra nếu mật khẩu mới trùng với mật khẩu cũ
       if (oldPassword != null && newPassword != null && oldPassword == newPassword) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -98,7 +113,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
       } else if (response.statusCode == 400) {
         final errorResponse = jsonDecode(response.body);
         String errorMessage = errorResponse['error'] ?? 'Failed to update user information.';
-        
+
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -127,6 +142,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
       }
     }
   }
+
 
 
   Future<void> logout() async {
