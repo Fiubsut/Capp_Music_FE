@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/developmentPage.dart';
 import 'package:flutter_application_1/favorite_song_page.dart';
 import 'package:flutter_application_1/playlist_page.dart';
 import 'package:http/http.dart' as http;
@@ -275,13 +276,17 @@ class _UserInfoPageState extends State<UserInfoPage> {
     return ListTile(
       leading: Icon(icon, color: Colors.greenAccent),
       title: Text(title, style: const TextStyle(color: Colors.white)),
-      onTap: onTap,
+      onTap: () {
+        print('Navigating to $title');
+        onTap();
+      },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       tileColor: Colors.grey[800],
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       trailing: const Icon(Icons.arrow_forward_ios, color: Colors.greenAccent, size: 16),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -338,8 +343,19 @@ class _UserInfoPageState extends State<UserInfoPage> {
                         MaterialPageRoute(builder: (context) => const FavoriteSongsPage()),
                       );
                     }),
-                    buildMenuItem('Help & Support', Icons.help_outline, () {}),
-                    buildMenuItem('Settings', Icons.settings, () {}),
+                    buildMenuItem('Help & Support', Icons.help_outline, () async {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const DevelopmentPage()),
+                      );
+                    }),
+                    buildMenuItem('Settings', Icons.settings, () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const DevelopmentPage()),
+                      );
+                      print("Returned from Settings Page");
+                    }),
                     Divider(color: Colors.grey[700]),
                     buildMenuItem('Logout', Icons.logout, logout),
                   ],

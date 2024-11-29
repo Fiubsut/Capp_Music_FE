@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/search_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -193,7 +194,12 @@ class _AlbumPageState extends State<AlbumPage> {
             IconButton(
               icon: const Icon(Icons.search, color: Colors.greenAccent),
               // ignore: avoid_print
-              onPressed: () => print("Tìm Kiếm"),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SearchPage()),
+                );
+              },
             ),
             GestureDetector(
               onTap: () {
@@ -210,7 +216,7 @@ class _AlbumPageState extends State<AlbumPage> {
                       backgroundImage: AssetImage('assets/avtdf.jpg'),
                       radius: 20,
                     );
-                  } else if (snapshot.hasError || snapshot.data == null) {
+                  } else if (snapshot.hasError || snapshot.data == null || snapshot.data!.isEmpty) {
                     return const CircleAvatar(
                       backgroundImage: AssetImage('assets/avtdf.jpg'),
                       radius: 20,
